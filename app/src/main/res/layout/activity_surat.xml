@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SuratActivity"
     android:orientation="vertical"
     android:padding="16dp">
@@ -26,7 +27,19 @@
                 android:padding="16dp"
                 android:textAllCaps="false"/>
         </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAyat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/adapter_ayat"
+            tools:itemCount="5"
+            android:layout_marginTop="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
     </LinearLayout>
+
+
 
 
 

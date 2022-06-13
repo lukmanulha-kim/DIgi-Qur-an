@@ -3,4 +3,6 @@
     <string name="nama_surat_idn">Nama Surat Idn</string>
     <string name="nama_surat_arab">Nama Surat Arab</string>
     <string name="play_audio">Play Audio</string>
+    <string name="ayat_arab">Ayat Arab</string>
+    <string name="translate">Translate</string>
 </resources>

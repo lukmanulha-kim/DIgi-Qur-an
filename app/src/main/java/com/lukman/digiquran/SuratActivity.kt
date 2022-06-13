@@ -1,17 +1,33 @@
 package com.lukman.digiquran
 
+import android.content.ContentValues.TAG
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.lukman.digiquran.adapter.AyatAdapter
+import com.lukman.digiquran.databinding.ActivitySuratBinding
+import com.lukman.digiquran.model.MyViewModelFactory
+import com.lukman.digiquran.repository.MainRepository
+import com.lukman.digiquran.services.RetrofitServices
+import com.lukman.digiquran.viewmodel.MainViewModel
 import java.io.IOException
 
 class SuratActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySuratBinding
+
     private lateinit var cvNamaSurat : CardView
 
     var mediaPlayer : MediaPlayer?=null
+
+    lateinit var viewModel: MainViewModel
+    private val retrofitService = RetrofitServices.getInstance()
+    val adapter = AyatAdapter()
 
     companion object {
         const val EXTRA_NOMOR = "extra_nomor"
@@ -30,16 +46,25 @@ class SuratActivity : AppCompatActivity() {
         actionbar!!.title = intent.getStringExtra(EXTRA_NAMALATIN)
         actionbar.setDisplayHomeAsUpEnabled(true)
 
+        binding = ActivitySuratBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(
+            MainViewModel::class.java)
+        binding.rvAyat.adapter = adapter
+        viewModel.ayatList.observe(this, Observer {
+            Log.d(TAG, "onCreate: $it")
+            if (!it.ayat.isNullOrEmpty())
+            adapter.setAyatList(it.ayat)
+        })
+        viewModel.errorMessage.observe(this, Observer {
+        })
+        viewModel.getAllAyat(intent.getIntExtra(EXTRA_NOMOR,0))
+
         cvNamaSurat = findViewById(R.id.cvNamaSurat)
 
         cvNamaSurat.setOnClickListener {
             playAudio()
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        stopAudio()
     }
 
     override fun onSupportNavigateUp(): Boolean {
